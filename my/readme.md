@@ -1,6 +1,8 @@
 # 这是一个 fork 项目
 
-使用时，请使用 replace 替代源仓库（只要指定版本）
+基于 https://github.com/bndr/gojenkins 的 master 分支进行 fork ！
+
+**使用时，请使用 replace 替代源仓库（只要指定版本）**
 
 ```shell
 module jjenkins
