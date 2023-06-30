@@ -12,7 +12,7 @@ import (
 * @CreateDate: 2023/6/29 16:55
 * @ChangeDate: 2023/6/29 16:55
 * @Version: 1.0.0
-* @Description: test for jenkins2
+* @Description: 测试 jenkins.go ； 使用的 jenkins 版本为：2.406
  */
 
 func getTestJenkins() (*Jenkins, error) {
