@@ -15,3 +15,8 @@ replace (
 	github.com/bndr/gojenkins v1.1.0 => github.com/mrlaojia/gojenkins v1.5.0
 )
 ```
+
+
+## 扩充说明
+
+* `/jenkins2.go`: 对 view 操作的补充

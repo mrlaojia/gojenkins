@@ -40,7 +40,7 @@ func TestJenkins_GetSubView(t *testing.T) {
 	viewName := "dev_pro2"
 	v, err := jenkins.GetSubView(ctx, viewName, "dev", "dev01")
 	assert.Nil(t, err)
-	assert.Equal(t, v.GetName(), viewName)
+	assert.Equal(t, viewName, v.GetName())
 }
 
 func TestJenkins_GetAllSubViews(t *testing.T) {
@@ -48,11 +48,11 @@ func TestJenkins_GetAllSubViews(t *testing.T) {
 	jenkins, err := getTestJenkins()
 	assert.Nil(t, err)
 
-	vs, err := jenkins.GetAllSubViews(ctx, "dev", "dev01")
+	views, err := jenkins.GetAllSubViews(ctx, "dev", "dev01")
 	assert.Nil(t, err)
-	for _, r := range vs {
-		t.Log(r.GetUrl(), r.GetName())
-	}
+
+	assert.Equal(t, 2, len(views))
+	assert.Equal(t, 1, len(views[0].Raw.Jobs))
 }
 
 func TestView_Delete(t *testing.T) {
@@ -63,7 +63,7 @@ func TestView_Delete(t *testing.T) {
 	viewName := "dev_pro2"
 	v, err := jenkins.GetSubView(ctx, viewName, "dev", "dev01")
 	assert.Nil(t, err)
-	assert.Equal(t, v.GetName(), viewName)
+	assert.Equal(t, viewName, v.GetName())
 
 	ok, err := v.Delete(ctx)
 	assert.Nil(t, err)
