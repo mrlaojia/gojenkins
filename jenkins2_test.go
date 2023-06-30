@@ -54,3 +54,29 @@ func TestJenkins_GetAllSubViews(t *testing.T) {
 		t.Log(r.GetUrl(), r.GetName())
 	}
 }
+
+func TestView_Delete(t *testing.T) {
+	ctx := context.Background()
+	jenkins, err := getTestJenkins()
+	assert.Nil(t, err)
+
+	viewName := "dev_pro2"
+	v, err := jenkins.GetSubView(ctx, viewName, "dev", "dev01")
+	assert.Nil(t, err)
+	assert.Equal(t, v.GetName(), viewName)
+
+	ok, err := v.Delete(ctx)
+	assert.Nil(t, err)
+	assert.Equal(t, true, ok)
+}
+
+func TestJenkins_DeleteView(t *testing.T) {
+	ctx := context.Background()
+	jenkins, err := getTestJenkins()
+	assert.Nil(t, err)
+
+	viewName := "wwwwwww"
+	ok, err := jenkins.DeleteView(ctx, viewName)
+	assert.Nil(t, err)
+	assert.Equal(t, true, ok)
+}

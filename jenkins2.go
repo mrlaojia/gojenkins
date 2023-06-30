@@ -79,6 +79,29 @@ func (j *Jenkins) GetAllSubViews(ctx context.Context, parents ...string) ([]*Vie
 	return views, nil
 }
 
+// DeleteView 删除 view
+// parents 可以指定嵌套深度，包括顶层
+func (j *Jenkins) DeleteView(ctx context.Context, viewName string, parents ...string) (bool, error) {
+	view := View{
+		Raw:     new(ViewResponse),
+		Jenkins: j,
+		Base:    j.depJobUrl(parents...) + "/view/" + viewName,
+	}
+	return view.Delete(ctx)
+}
+
+// Delete 补充删除 view
+func (v *View) Delete(ctx context.Context) (bool, error) {
+	resp, err := v.Jenkins.Requester.Post(ctx, v.Base+"/doDelete", nil, nil, nil)
+	if err != nil {
+		return false, err
+	}
+	if resp.StatusCode != 200 {
+		return false, errors.New(strconv.Itoa(resp.StatusCode))
+	}
+	return true, nil
+}
+
 // depUrl 组合成 /job/x/job/x 格式的url
 func (j *Jenkins) depJobUrl(parents ...string) string {
 	return j.depUrl("job", parents...)
