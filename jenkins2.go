@@ -20,6 +20,12 @@ import (
 // CreateViewInFolder 在某个文件夹下创建 view
 // parents 可以指定嵌套深度，包括顶层，可以替代 j.CreateView
 func (j *Jenkins) CreateViewInFolder(ctx context.Context, viewName string, viewType string, parents ...string) (*View, error) {
+	return j.CreateViewWithDescInFolder(ctx, viewName, "", viewType, parents...)
+}
+
+// CreateViewWithDescInFolder 在某个文件夹下创建 view, 并且附带描述信息
+// parents 可以指定嵌套深度，包括顶层，可以替代 j.CreateView
+func (j *Jenkins) CreateViewWithDescInFolder(ctx context.Context, viewName, desc string, viewType string, parents ...string) (*View, error) {
 
 	baseur := j.depJobUrl(parents...)
 	view := &View{Jenkins: j, Raw: new(ViewResponse), Base: baseur + "/view/" + viewName}
@@ -30,8 +36,9 @@ func (j *Jenkins) CreateViewInFolder(ctx context.Context, viewName string, viewT
 		"mode":   viewType,
 		"Submit": "OK",
 		"json": makeJson(map[string]string{
-			"name": viewName,
-			"mode": viewType,
+			"name":        viewName,
+			"mode":        viewType,
+			"description": desc,
 		}),
 	}
 	r, err := j.Requester.Post(ctx, endpoint, nil, view.Raw, data)
@@ -88,18 +95,6 @@ func (j *Jenkins) DeleteView(ctx context.Context, viewName string, parents ...st
 		Base:    j.depJobUrl(parents...) + "/view/" + viewName,
 	}
 	return view.Delete(ctx)
-}
-
-// Delete 补充删除 view
-func (v *View) Delete(ctx context.Context) (bool, error) {
-	resp, err := v.Jenkins.Requester.Post(ctx, v.Base+"/doDelete", nil, nil, nil)
-	if err != nil {
-		return false, err
-	}
-	if resp.StatusCode != 200 {
-		return false, errors.New(strconv.Itoa(resp.StatusCode))
-	}
-	return true, nil
 }
 
 // depUrl 组合成 /job/x/job/x 格式的url

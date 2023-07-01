@@ -32,6 +32,18 @@ func TestJenkins_CreateViewInFolder(t *testing.T) {
 	assert.Equal(t, viewName, view1.GetName())
 }
 
+func TestJenkins_CreateViewWithDescInFolder(t *testing.T) {
+	ctx := context.Background()
+	jenkins, err := getTestJenkins()
+	assert.Nil(t, err)
+
+	viewName := "dev_pro3"
+	desc := "this is dev_pro3  view"
+	view1, err := jenkins.CreateViewWithDescInFolder(ctx, viewName, desc, LIST_VIEW, "qa")
+	assert.Nil(t, err)
+	assert.Equal(t, viewName, view1.GetName())
+}
+
 func TestJenkins_GetSubView(t *testing.T) {
 	ctx := context.Background()
 	jenkins, err := getTestJenkins()
@@ -66,17 +78,6 @@ func TestView_Delete(t *testing.T) {
 	assert.Equal(t, viewName, v.GetName())
 
 	ok, err := v.Delete(ctx)
-	assert.Nil(t, err)
-	assert.Equal(t, true, ok)
-}
-
-func TestJenkins_DeleteView(t *testing.T) {
-	ctx := context.Background()
-	jenkins, err := getTestJenkins()
-	assert.Nil(t, err)
-
-	viewName := "wwwwwww"
-	ok, err := jenkins.DeleteView(ctx, viewName)
 	assert.Nil(t, err)
 	assert.Equal(t, true, ok)
 }
