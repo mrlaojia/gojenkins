@@ -54,15 +54,20 @@ func (j *Jenkins) CreateViewWithDescInFolder(ctx context.Context, viewName, desc
 }
 
 // GetSubView 查看某个文件夹下的某个view
-// parents 可以指定嵌套深度，包括顶层，可以替代 j.GetView
+// parents 可以指定嵌套深度，包括顶层，替代 j.GetView
+// 注意：GetView 没有对状态码判断，当view不存在时，也会判断存在
 func (j *Jenkins) GetSubView(ctx context.Context, name string, parents ...string) (*View, error) {
 	url := j.depJobUrl(parents...) + "/view/" + name
 	view := View{Jenkins: j, Raw: new(ViewResponse), Base: url}
-	_, err := view.Poll(ctx)
+	status, err := view.Poll(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &view, nil
+	
+	if status == 200 {
+		return &view, nil
+	}
+	return nil, errors.New(strconv.Itoa(status))
 }
 
 // GetAllSubViews 查看某个文件夹下的所有view
